@@ -1,0 +1,71 @@
+@startuml
+autonumber "0."
+
+
+' 定义角色
+actor User
+
+box "NameServer" #LightBlue
+participant "NameResolveWorker\n多线程" as a1
+participant "Sender\n单线程" as a2
+end box
+
+box "RecursiveResolver" #YELLOW
+participant "RecursiveResolveWorker\n多线程" as b1
+participant "Sender\n单线程" as b2
+end box
+
+box "RecursiveResolver" #Gold
+participant "上游DNS服务器" as c
+end box
+
+'box "Internal Service" #LightBlue
+'participant "微服务B" as b $c1
+'participant "微服务C" as c
+'end box
+
+' 开始流程
+
+== DNS查询全流程 ==
+User -[#red]>a1: 发出指令\n这是一个DNS查询指令
+'User-[#red]>a1 ++: 发出指令\n这是一个DNS查询指令
+
+a1->a1 : 本地规则匹配
+a1->a1 : 本地缓存匹配
+'a1->b ++ #CDCDCD: 通过上游DNS服务器查询
+a1->b2 : 发出DNS查询指令
+b2->c : 发出DNS查询指令
+c->b1 : 返回DNS查询结果
+
+b1->a2 : 返回DNS查询结果
+a2-[#red]>User: 返回DNS查询结果
+
+
+'|||
+'|||
+'loop 3次
+'b->c --++: 第二步
+'end
+
+'c->c ++ : 第三步
+
+'alt#Gold #yellow 如果成功，则直接返回
+'c-->>a --
+'else #Pink 失败
+'c->c ++ : 重试一次
+'c-->>a --
+'end
+'deactivate c
+'
+'a-->>User: bye
+
+'group 随便框一下 [哈哈哈]
+'User-->>]: 结束
+'end
+'
+'note left of User #aqua
+'这是一个note
+'欢迎使用时序图
+'end note
+
+@enduml
