@@ -1,7 +1,7 @@
 
 echo "开始执行stop.sh..."
 
-pid=$(ps aux|grep dns-ali|grep -v grep |awk -F ' ' '{print $2}')
+pid=$(ps aux|grep lzc-dns|grep -v grep |awk -F ' ' '{print $2}')
 
 if [ "" != "$pid" ]; then
     sudo kill -9 $pid

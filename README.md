@@ -1,4 +1,4 @@
-# ali-dns
+# lzc-dns
 DNS服务器，又名域名解析服务器，英文名是Domain Name Server，当前项目使用了Java语言基本上完整了实现了一套DNS数据包接收、解析、发送等功能，完全开源
 
 本项目实现了一个功能较全面的DNS服务器，可以通过WEB端的管理界面，达到如下目的：
@@ -7,10 +7,13 @@ DNS服务器，又名域名解析服务器，英文名是Domain Name Server，�
 3. 上网行为控制，通过将指定域名的IP解析到127.0.0.1等不可达或不正确的IP上来实现网站屏蔽。
 4. 内部带宽控制，通过将指定域名的IP解析到一个HTTP代理缓存服务器上，实现流量复用。
 
+<img src="doc/dns-flow.png" />
+
+
 # 启动
 1. 查看并修改好配置文件`application.properties`，按配置文件里的库名和用户名密码创建好，或使用现成的数据库账号，使用`/doc/1.2-init-table.sql`数据库建表脚本创建好相应的表
 2. 配置文件里的`dns.upstream.server.address`为上游DNS服务器地址，将为本DNS服务器提供递归解析能力，当遇到本地解析规则所不支持的域名时，将向上游DNS服务器进行查询并回应。
-3. 使用`mvn package`打包后直接用`java -jar original-dns-ali-1.0-SNAPSHOT.jar`启动。
+3. 使用`mvn package`打包后直接用`java -jar lzc-dns-1.0.0-SNAPSHOT.jar`启动。
 4. 或是直接在IDE中启动主入口程序`cn.org.hentai.dns.app.DNSCheaterAPP`。
 5. 此时可以登陆网页管理控制台，默认为`http://localhost`（如果你是本机运行的话）。
 6. 管理控制台的账号在`1.2-init-table.sql`里已经准备好了一个，用户名为`admin`，密码为`123456`。
@@ -40,4 +43,4 @@ dig @127.0.0.1 baidu.com a
 <img src="doc/dns-create.png" />
 
 # 联系作者
-本项目纯用作学习用途，欢迎加作者微信lzc_java进行交流
+本项目纯用作学习用途，欢迎加作者微信```lzc_java```进行交流

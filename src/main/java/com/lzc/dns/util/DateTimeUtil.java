@@ -170,7 +170,7 @@ public class DateTimeUtil {
     }
 
     /**
-     * 取得当前的日期时间字符串YYYYMMDD
+     * 取得当前的日期时间字符串HHmmss
      *
      * @return String 取得当前的日期时间字符串
      */

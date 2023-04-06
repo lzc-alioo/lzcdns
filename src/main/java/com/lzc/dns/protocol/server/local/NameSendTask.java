@@ -36,6 +36,10 @@ public class NameSendTask extends Thread {
 
 
     private void sendResponse(Response response) throws IOException {
+        if (response.getRemoteAddress() == null) {
+            return;
+        }
+
         ByteBuffer buffer = ByteBuffer.allocate(1024);
         //buffer.clear();
         buffer.put(response.getPacket());

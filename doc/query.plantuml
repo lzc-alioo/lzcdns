@@ -6,26 +6,21 @@ autonumber "0."
 actor User
 
 box "NameServer" #LightBlue
-participant "NameResolveWorker\n多线程" as a1
-participant "Sender\n单线程" as a2
+participant "NameResolver\n多线程" as a1
+participant "NameSender\n多线程" as a2
 end box
 
-box "RecursiveResolver" #YELLOW
-participant "RecursiveResolveWorker\n多线程" as b1
-participant "Sender\n单线程" as b2
+box "UpstreamServer" #LightBlue
+participant "UpstreamResolver\n多线程" as b1
+participant "UpstreamSender\n多线程" as b2
 end box
 
-box "RecursiveResolver" #Gold
-participant "上游DNS服务器" as c
+box "远程服务器" #GREY
+participant "114.114.114.114\n可配置" as c
 end box
 
-'box "Internal Service" #LightBlue
-'participant "微服务B" as b $c1
-'participant "微服务C" as c
-'end box
 
 ' 开始流程
-
 == DNS查询全流程 ==
 User -[#red]>a1: 发出指令\n这是一个DNS查询指令
 'User-[#red]>a1 ++: 发出指令\n这是一个DNS查询指令
@@ -37,6 +32,8 @@ a1->b2 : 发出DNS查询指令
 b2->c : 发出DNS查询指令
 c->b1 : 返回DNS查询结果
 
+b1->b1 : 解析远程DNS服务器结果
+b1->b1 : 缓存解析后结果
 b1->a2 : 返回DNS查询结果
 a2-[#red]>User: 返回DNS查询结果
 

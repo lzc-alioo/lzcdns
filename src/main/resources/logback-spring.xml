@@ -26,7 +26,7 @@
             <!--日志文件输出的文件名,可设置文件类型为gz,开启文件压缩-->
             <FileNamePattern>${LOG_HOME}/app.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
             <!--日志文件保留天数-->
-            <MaxHistory>30</MaxHistory>
+            <MaxHistory>14</MaxHistory>
             <!--按大小分割同一天的-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
@@ -43,31 +43,31 @@
 
     </appender>
 
-    <!--文件输出,时间窗口滚动-->
-    <appender name="NET" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--日志名,指定最新的文件名，其他文件名使用FileNamePattern -->
-        <File>${LOG_HOME}/net.log</File>
-        <!--文件滚动模式-->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--日志文件输出的文件名,可设置文件类型为gz,开启文件压缩-->
-            <FileNamePattern>${LOG_HOME}/net.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
-            <!--日志文件保留天数-->
-            <MaxHistory>30</MaxHistory>
-            <!--按大小分割同一天的-->
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-        </rollingPolicy>
+<!--    &lt;!&ndash;文件输出,时间窗口滚动&ndash;&gt;-->
+<!--    <appender name="NET" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        &lt;!&ndash;日志名,指定最新的文件名，其他文件名使用FileNamePattern &ndash;&gt;-->
+<!--        <File>${LOG_HOME}/net.log</File>-->
+<!--        &lt;!&ndash;文件滚动模式&ndash;&gt;-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash;日志文件输出的文件名,可设置文件类型为gz,开启文件压缩&ndash;&gt;-->
+<!--            <FileNamePattern>${LOG_HOME}/net.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>-->
+<!--            &lt;!&ndash;日志文件保留天数&ndash;&gt;-->
+<!--            <MaxHistory>14</MaxHistory>-->
+<!--            &lt;!&ndash;按大小分割同一天的&ndash;&gt;-->
+<!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+<!--                <maxFileSize>100MB</maxFileSize>-->
+<!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+<!--        </rollingPolicy>-->
 
-        <!--输出格式-->
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-            <pattern>${PATTEN}</pattern>
-            <!--设置编码-->
-            <charset>UTF-8</charset>
-        </encoder>
+<!--        &lt;!&ndash;输出格式&ndash;&gt;-->
+<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
+<!--            &lt;!&ndash;格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符&ndash;&gt;-->
+<!--            <pattern>${PATTEN}</pattern>-->
+<!--            &lt;!&ndash;设置编码&ndash;&gt;-->
+<!--            <charset>UTF-8</charset>-->
+<!--        </encoder>-->
 
-    </appender>
+<!--    </appender>-->
 
     <!--<logger name="com.example.demo" level="INFO" additivity="false">-->
     <!--<appender-ref ref="NET"/>-->

@@ -46,7 +46,8 @@ public class DnsPackageSendReceiveTest {
 
 
         //c.apple.news
-        String domain = "c.apple.news";
+//        String domain = "c.apple.news";
+        String domain = "df.tanx.com";
 
         //5, 98, 97, 105, 100, 117, 3, 99, 111, 109, //domain baidu.com
         //1,99,5,97,112,112,108,101,4,110,101,119,115,  //domain c.apple.news

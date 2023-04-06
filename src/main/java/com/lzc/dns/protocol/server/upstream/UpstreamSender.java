@@ -17,8 +17,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class UpstreamSender {
-    private ThreadPoolExecutor senderPool = new AliooThreadPoolExecutor(2, 2, 0, TimeUnit.DAYS, new LinkedBlockingQueue<>(65536),
-            "upstream-sender", new ThreadPoolExecutor.DiscardOldestPolicy());
+    private ThreadPoolExecutor senderPool = new AliooThreadPoolExecutor(
+            Configs.getInt("dns.upstream.sender.workers", 4),
+            Configs.getInt("dns.upstream.sender.workers", 4),
+            0, TimeUnit.DAYS,
+            new LinkedBlockingQueue<>(10000),
+            "upstream-sender",
+            new ThreadPoolExecutor.DiscardOldestPolicy());
 
     private UpstreamServer upstreamServer;
     private DatagramChannel datagramChannel;

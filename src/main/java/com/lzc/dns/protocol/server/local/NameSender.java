@@ -1,6 +1,7 @@
 package com.lzc.dns.protocol.server.local;
 
 import com.lzc.dns.protocol.entity.Response;
+import com.lzc.dns.util.Configs;
 import com.lzc.dns.util.pool.AliooThreadPoolExecutor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +15,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class NameSender {
-    private ThreadPoolExecutor nameSenderPool = new AliooThreadPoolExecutor(2, 2, 0, TimeUnit.DAYS, new LinkedBlockingQueue<>(65536), "name-sender", new ThreadPoolExecutor.DiscardOldestPolicy());
+    private ThreadPoolExecutor nameSenderPool = new AliooThreadPoolExecutor(
+            Configs.getInt("dns.server.sender.workers", 4),
+            Configs.getInt("dns.server.sender.workers", 4),
+            0, TimeUnit.DAYS,
+            new LinkedBlockingQueue<>(100000),
+            "name-sender",
+            new ThreadPoolExecutor.DiscardOldestPolicy());
 
     private DatagramChannel datagramChannel;
 

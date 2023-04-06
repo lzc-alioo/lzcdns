@@ -47,13 +47,14 @@ public class UpstreamServerTest {
         log.info("sequence start :{}", sequence);
 
         //c.apple.news
-        String queryName = "baidu.com";
+//        String queryName = "baidu.com";
+        String queryName = "df.tanx.com";
 
-        Packet packet = QuestionNameEncoder.buildPacket(queryName, sequence++, (short) MessageType.A.getType());
+        Packet packet = QuestionNameEncoder.buildPacket(queryName, sequence++, (short) MessageType.HTTPS.getType());
 
         SocketAddress remoteAddress = new InetSocketAddress(444);
 
-        Request request = new Request(remoteAddress, packet);
+        Request request = new Request(null, packet);
         UpstreamServer.getInstance().sendRequest(request);
 
 

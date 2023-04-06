@@ -1,5 +1,6 @@
 package com.lzc.dns;
 
+import com.lzc.dns.protocol.enums.MessageType;
 import com.lzc.dns.util.Packet;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -21,6 +22,9 @@ public class DnsPackageSendTest {
     public void init() {
         try {
             log.info("init...");
+            datagramChannel = DatagramChannel.open();
+            datagramChannel.configureBlocking(false);
+
         } catch (Exception e) {
             log.error("init error", e);
         }
@@ -30,7 +34,7 @@ public class DnsPackageSendTest {
 
     @Test
     public void batchTestQuery() throws IOException {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 80000; i++) {
             testQuery();
 
         }
@@ -40,76 +44,41 @@ public class DnsPackageSendTest {
     public void testQuery() throws IOException {
         log.info("sequence:{}", sequence);
 
-        DatagramChannel datagramChannel = null;
-        datagramChannel = DatagramChannel.open();
-        datagramChannel.configureBlocking(false);
 
-        SocketAddress upstreamNameServer = null;
-        upstreamNameServer = new InetSocketAddress("192.168.16.233", 53);
+        SocketAddress upstreamNameServer = new InetSocketAddress("192.168.16.233", 53);
 
-        byte[] message = {0, 1, 1, 32, 0, 1, 0, 0, 0, 0, 0, 1, //header ,length=12
-                5, 98, 97, 105, 100, 117, 3, 99, 111, 109, //domain
-                0,    //domain end
-                0, 1, //queryType
-                0, 1 //queryClass
-        };
-        Packet packet = Packet.create(message);
+//        byte[] message = {0, 1, 1, 32, 0, 1, 0, 0, 0, 0, 0, 1, //header ,length=12
+//                5, 98, 97, 105, 100, 117, 3, 99, 111, 109, //domain
+//                0,    //domain end
+//                0, 1, //queryType
+//                0, 1 //queryClass
+//        };
+//        Packet packet = Packet.create(message);
 
-        packet.setShort(0, sequence++);
+//        Packet packet = QuestionNameEncoder.buildPacket( "df.tanx.com", sequence++, (short) MessageType.HTTPS.getType());
+        Packet packet = QuestionNameEncoder.buildPacket("iterm2.com", sequence, (short) MessageType.HTTPS.getType());
+        packet.setShort(0, sequence);
 
         DnsUtil.send(datagramChannel, upstreamNameServer, packet);
 
+        sequence++;
     }
 
     @Test
     public void testQuery2() {
         log.info("sequence start :{}", sequence);
 
-        SocketAddress upstreamNameServer = new InetSocketAddress("114.114.114.114", 53);
+        SocketAddress upstreamNameServer = new InetSocketAddress("192.168.16.233", 53);
 
+        Packet packet = QuestionNameEncoder.buildPacket("df.tanx.com.gds.alibabadns.com", sequence, (short) MessageType.HTTPS.getType());
 
-        //c.apple.news
-        String domain = "c.apple.news";
+        packet.setShort(0, sequence);
 
-        //5, 98, 97, 105, 100, 117, 3, 99, 111, 109, //domain baidu.com
-        //1,99,5,97,112,112,108,101,4,110,101,119,115,0,  //domain c.apple.news
+        DnsUtil.send(datagramChannel, upstreamNameServer, packet);
 
-        byte[] message = {0, 1, 1, 32, 0, 1, 0, 0, 0, 0, 0, 1, //header ,length=12
-                1, 99, 5, 97, 112, 112, 108, 101, 4, 110, 101, 119, 115, 0,  //domain
-                0,    //domain end
-                0, 65, //queryType
-                0, 1 //queryClass
-        };
-        Packet packet = Packet.create(message);
-        packet.setShort(0, sequence++);
-
-
-        DatagramChannel finalDatagramChannel1 = datagramChannel;
-        SocketAddress finalUpstreamNameServer = upstreamNameServer;
-        //new Thread(() -> send(finalDatagramChannel1, finalUpstreamNameServer, packet)).start();
-        DnsUtil.send(finalDatagramChannel1, finalUpstreamNameServer, packet);
-
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        log.info("sequence end :{}", sequence);
+        sequence++;
 
     }
-
-//
-//    private void send(DatagramChannel datagramChannel, SocketAddress upstreamNameServer, Packet packet) {
-//        ByteBuffer buffer = ByteBuffer.allocate(1024);
-//        buffer.put(packet.getBytes());
-//        buffer.flip();
-//        try {
-//            datagramChannel.send(buffer, upstreamNameServer);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 
 }

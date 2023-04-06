@@ -5,11 +5,13 @@ mkdir build
 
 rm -rf logs/*
 
-path_target=/Users/alioo/work/gitstudy/dns-ali/target/
-path_output=/Users/alioo/work/gitstudy/dns-ali/build/
+PATH_BASE=$(cd $(dirname $0); pwd)
+
+path_target=${PATH_BASE}/target/
+path_output=${PATH_BASE}/build/
 
 
-cp $path_target/dns-ali-1.0-SNAPSHOT.jar $path_output
+cp $path_target/lzc-dns-1.0.0-SNAPSHOT.jar $path_output
 cp shell/* $path_output
 
 chmod 777 $path_output/*.sh

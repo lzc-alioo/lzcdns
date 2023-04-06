@@ -39,6 +39,19 @@ public class NameServer extends Thread {
         }
     }
 
+    private DatagramChannel initDatagramChannel() throws IOException {
+        String binIp = Configs.get("dns.server.addr", "0.0.0.0");
+        int port = Configs.getInt("dns.server.port", 53);
+        InetSocketAddress inetSocketAddress = new InetSocketAddress(binIp, port);
+
+        DatagramChannel datagramChannel = DatagramChannel.open();
+        datagramChannel.socket().bind(inetSocketAddress);
+        datagramChannel.configureBlocking(false);
+        log.info("NameServer started at {}:{}", binIp, port);
+
+        return datagramChannel;
+    }
+
     public void run() {
         try {
             Selector selector = Selector.open();
@@ -77,19 +90,6 @@ public class NameServer extends Thread {
         return nameSender.sendResponse(response);
     }
 
-
-    private DatagramChannel initDatagramChannel() throws IOException {
-        String binIp = Configs.get("dns.server.addr", "0.0.0.0");
-        int port = Configs.getInt("dns.server.port", 53);
-        InetSocketAddress inetSocketAddress = new InetSocketAddress(binIp, port);
-
-        DatagramChannel datagramChannel = DatagramChannel.open();
-        datagramChannel.socket().bind(inetSocketAddress);
-        datagramChannel.configureBlocking(false);
-        log.info("NameServer started at {}:{}", binIp, port);
-
-        return datagramChannel;
-    }
 
     static NameServer instance = null;
 

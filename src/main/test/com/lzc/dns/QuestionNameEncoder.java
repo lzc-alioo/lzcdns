@@ -18,6 +18,7 @@ public final class QuestionNameEncoder {
      * @return
      */
     public static Packet buildPacket(String questionName, short transactionId, short type) {
+        //example
         //5, 98, 97, 105, 100, 117, 3, 99, 111, 109, //questionName baidu.com
         //1,99,5,97,112,112,108,101,4,110,101,119,115,  //questionName c.apple.news
 

@@ -64,6 +64,12 @@ public class UpstreamResolveTask extends Thread {
             return;
         }
 
+//        debug
+//        byte[] tmp = packet.getBytes();
+//        for (int i = 0; i < tmp.length; i++) {
+//            log.info("==============={} = {} {} ({})", i, "0x" + Integer.toHexString(tmp[i] & 0xff), tmp[i] & 0xff, tmp[i]);
+//        }
+
         List<ResourceRecord> records = new ArrayList();
         //默认值：100分钟
         int ttl = getTtl(packet, msg, question, records);

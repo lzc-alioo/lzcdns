@@ -1,6 +1,7 @@
 package com.lzc.dns.protocol.server.upstream;
 
 import com.lzc.dns.protocol.entity.RecursiveResponse;
+import com.lzc.dns.util.Configs;
 import com.lzc.dns.util.pool.AliooThreadPoolExecutor;
 import com.lzc.dns.util.pool.EagleEye;
 import com.lzc.dns.util.pool.EagleEyeContext;
@@ -15,8 +16,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class UpstreamResolver {
-    private ThreadPoolExecutor resolverPool = new AliooThreadPoolExecutor(4, 4, 0, TimeUnit.DAYS, new LinkedBlockingQueue<>(65536),
-            "upstream-resolver", new ThreadPoolExecutor.DiscardOldestPolicy());
+    private ThreadPoolExecutor resolverPool = new AliooThreadPoolExecutor(
+            Configs.getInt("dns.upstream.resolver.workers", 4),
+            Configs.getInt("dns.upstream.resolver.workers", 4),
+            0, TimeUnit.DAYS,
+            new LinkedBlockingQueue<>(10000),
+            "upstream-resolver",
+            new ThreadPoolExecutor.DiscardOldestPolicy());
 
     public boolean resolveRequest(RecursiveResponse recursiveResponse) {
         EagleEye.set(EagleEyeContext.create(recursiveResponse.getTraceId()));
