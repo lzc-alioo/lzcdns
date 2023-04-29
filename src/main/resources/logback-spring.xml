@@ -6,6 +6,7 @@
     <property name="LOG_HOME" value="./logs"/>
     <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
     <property name="PATTEN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%thread] %-5level %logger{50} - %msg%n"/>
+    <property name="PATTEN_MONITOR" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] - %msg%n"/>
 
     <!--控制台输出appender-->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -24,7 +25,7 @@
         <!--文件滚动模式-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名,可设置文件类型为gz,开启文件压缩-->
-            <FileNamePattern>${LOG_HOME}/app.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>
+            <FileNamePattern>${LOG_HOME}/app.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
             <!--日志文件保留天数-->
             <MaxHistory>14</MaxHistory>
             <!--按大小分割同一天的-->
@@ -43,35 +44,36 @@
 
     </appender>
 
-<!--    &lt;!&ndash;文件输出,时间窗口滚动&ndash;&gt;-->
-<!--    <appender name="NET" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--        &lt;!&ndash;日志名,指定最新的文件名，其他文件名使用FileNamePattern &ndash;&gt;-->
-<!--        <File>${LOG_HOME}/net.log</File>-->
-<!--        &lt;!&ndash;文件滚动模式&ndash;&gt;-->
-<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
-<!--            &lt;!&ndash;日志文件输出的文件名,可设置文件类型为gz,开启文件压缩&ndash;&gt;-->
-<!--            <FileNamePattern>${LOG_HOME}/net.%d{yyyy-MM-dd}.%i.log.gz</FileNamePattern>-->
-<!--            &lt;!&ndash;日志文件保留天数&ndash;&gt;-->
-<!--            <MaxHistory>14</MaxHistory>-->
-<!--            &lt;!&ndash;按大小分割同一天的&ndash;&gt;-->
-<!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
-<!--                <maxFileSize>100MB</maxFileSize>-->
-<!--            </timeBasedFileNamingAndTriggeringPolicy>-->
-<!--        </rollingPolicy>-->
+    <!--文件输出,时间窗口滚动-->
+    <appender name="APPENDER_MONITOR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志名,指定最新的文件名，其他文件名使用FileNamePattern -->
+        <File>${LOG_HOME}/monitor.log</File>
+        <!--文件滚动模式-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名,可设置文件类型为gz,开启文件压缩-->
+            <FileNamePattern>${LOG_HOME}/monitor.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>14</MaxHistory>
+            <!--按大小分割同一天的-->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
 
-<!--        &lt;!&ndash;输出格式&ndash;&gt;-->
-<!--        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">-->
-<!--            &lt;!&ndash;格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符&ndash;&gt;-->
-<!--            <pattern>${PATTEN}</pattern>-->
-<!--            &lt;!&ndash;设置编码&ndash;&gt;-->
-<!--            <charset>UTF-8</charset>-->
-<!--        </encoder>-->
+        <!--输出格式-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${PATTEN_MONITOR}</pattern>
+            <!--设置编码-->
+            <charset>UTF-8</charset>
+        </encoder>
 
-<!--    </appender>-->
+    </appender>
 
-    <!--<logger name="com.example.demo" level="INFO" additivity="false">-->
-    <!--<appender-ref ref="NET"/>-->
-    <!--</logger>-->
+    <logger name="LOGGER_MONITOR" level="INFO" additivity="false">
+    <appender-ref ref="APPENDER_MONITOR"/>
+    </logger>
+
 
     <!--指定基础的日志输出级别-->
     <root level="INFO">
@@ -80,3 +82,5 @@
         <appender-ref ref="APP"/>
     </root>
 </configuration>
+
+

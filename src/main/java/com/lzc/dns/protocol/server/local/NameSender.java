@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class NameSender {
     private ThreadPoolExecutor nameSenderPool = new AliooThreadPoolExecutor(
+            Configs.getInt("dns.server.sender.workers", 4)/2,
             Configs.getInt("dns.server.sender.workers", 4),
-            Configs.getInt("dns.server.sender.workers", 4),
-            0, TimeUnit.DAYS,
+            300, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(100000),
             "name-sender",
             new ThreadPoolExecutor.DiscardOldestPolicy());

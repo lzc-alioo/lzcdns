@@ -1,0 +1,67 @@
+dns:
+    cache:
+        expire_time: 900
+    server:
+        addr: 0.0.0.0
+        port: 53
+        resolver:
+            workers: 8
+        sender:
+            workers: 16
+    stat-logger: 'on'
+    upstream:
+        resolver:
+            workers: 4
+        sender:
+            workers: 8
+        server:
+            address: 114.114.114.114
+            port: 53
+    stat:
+        monitor-path: /home/pi/work/dns/logs
+
+
+mybatis:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: cn.org.hentai.dns.entity
+server:
+    port: 8053
+spring:
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        druid:
+            filter:
+                stat:
+                    merge-sql: true
+                    slow-sql-millis: 5000.0
+            initial-size: 5
+            max-active: 20
+            max-pool-prepared-statement-per-connection-size: 20
+            max-wait: 60000
+            min-evictable-idle-time-millis: 30000
+            min-idle: 5
+            pool-prepared-statements: true
+            test-on-borrow: true
+            test-on-return: false
+            test-while-idle: true
+            time-between-eviction-runs-millis: 60000
+            validation-query: SELECT 1 FROM DUAL
+        initial-size: 5
+        max-idle: 10
+        max-wait: 10000
+        min-idle: 5
+        password: 123456
+        url: jdbc:mysql://192.168.16.126:3317/dnscheater?characterEncoding=utf8
+        username: test
+    devtools:
+        restart:
+            additional-paths: src/main/java,src/main/resources,src/main/resources/static
+            enabled: true
+    freemarker:
+        template-loader-path: classpath:/templates
+    http:
+        multipart:
+            maxFileSize: 1024MB
+            maxRequestSize: 1024MB
+    mvc:
+        static-path-pattern: /static/**

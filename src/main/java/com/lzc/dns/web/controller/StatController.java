@@ -4,17 +4,39 @@ import com.github.benmanes.caffeine.cache.stats.CacheStats;
 import com.lzc.dns.manager.CacheManager;
 import com.lzc.dns.manager.StatManager;
 import com.lzc.dns.web.entity.Result;
+import com.lzc.dns.web.service.StatService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * Created by matrixy on 2019/5/10.
  */
+@Slf4j
 @Controller
 @RequestMapping("/manage/stat")
 public class StatController extends BaseController {
+
+    @Autowired
+    private StatService statService;
+
+    // 请求示例：
+    // http://localhost:8053/manage/stat/summary2?monitorDate=2023-04-29&startTime=03:00&endTime=03:40
+    @RequestMapping("/summary2")
+    @ResponseBody
+    public Map<String, LinkedHashMap<String, Long>> summary2(String monitorDate, String startTime, String endTime) {
+        log.info("summary2 monitorDate:{} startTime:{} endTime:{}", monitorDate, startTime, endTime);
+        Map<String, LinkedHashMap<String, Long>> map = statService.topStat(monitorDate, startTime, endTime);
+        return map;
+    }
+
+
     @RequestMapping("/")
     public String index() {
         return "/stat/index";
