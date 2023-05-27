@@ -13,7 +13,6 @@ import com.lzc.dns.util.ByteUtils;
 import com.lzc.dns.util.DateTimeUtil;
 import com.lzc.dns.util.IPUtils;
 import com.lzc.dns.util.SpringUtils;
-import com.lzc.dns.web.entity.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,16 +68,18 @@ public class NameResolveTask extends Thread {
         StatManager.getInstance().log(remoteAddress, now, question.getName());
 
         //第一步，查询本地配置规则
-        Address answer = RuleManager.getInstance().matches(now, remoteAddress, question.getName());
-        if (answer != null) {
-            // 返回结果
-            int ttl = 180;
-            ResourceRecord[] records = new ResourceRecord[]{new ResourceRecord(question.getName(), MessageType.A.getType(), 01, ttl, IPUtils.toInteger(answer.getAddress()))};
-            Encoder encoder = SpringUtils.getBean(Encoder.class);
-            byte[] resp = encoder.encode((short) (message.transactionId & 0xffff), question.getName(), MessageType.A.getType(), records, ttl);
+        if(question.getType()==MessageType.A.getType()){
+            String answer = RuleManager.getInstance().matches(now, remoteAddress, question.getName());
+            if (answer != null) {
+                // 返回结果
+                int ttl = 180;
+                ResourceRecord[] records = new ResourceRecord[]{new ResourceRecord(question.getName(), MessageType.A.getType(), 01, ttl, IPUtils.toInteger(answer))};
+                Encoder encoder = SpringUtils.getBean(Encoder.class);
+                byte[] resp = encoder.encode((short) (message.transactionId & 0xffff), question.getName(), MessageType.A.getType(), records, ttl);
 //            byte[] resp = SimpleMessageEncoder.encode((short) (message.transactionId & 0xffff), question.getName(), Message.TYPE_A, records, ttl);
-            this.nameServer.sendResponse(new Response(request.remoteAddress, resp, question.getName(), question.getType(), request.startTime, QueryResultType.RULE.getType(), records, ttl));
-            return;
+                this.nameServer.sendResponse(new Response(request.remoteAddress, resp, question.getName(), question.getType(), request.startTime, QueryResultType.RULE.getType(), records, ttl));
+                return;
+            }
         }
 
         //第二步，查询缓存

@@ -50,17 +50,17 @@ spring:
     max-wait: 10000
     min-idle: 5
     password: 123456
-    url: jdbc:mysql://192.168.16.126:3317/dnscheater?characterEncoding=utf8
+    url: jdbc:mysql://192.168.16.126:3317/lzcdns?characterEncoding=utf8
     username: test
   devtools:
     restart:
       additional-paths: src/main/java,src/main/resources,src/main/resources/static
       enabled: true
-  freemarker:
-    template-loader-path: classpath:/templates
+#  freemarker:
+#    template-loader-path: classpath:/templates
   http:
     multipart:
       maxFileSize: 1024MB
       maxRequestSize: 1024MB
-  mvc:
-    static-path-pattern: /static/**
+#  mvc:
+#    static-path-pattern: /static/**

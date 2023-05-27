@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class Rule implements Serializable {
@@ -24,7 +23,7 @@ public class Rule implements Serializable {
     private Boolean enabled;
     private String dispatchMode;
 
-    private List<Address> addresses;
+    private String addresses;
     private int sequence = 0;
     private Random random = new Random();
 
@@ -48,26 +47,40 @@ public class Rule implements Serializable {
     }
 
     // 根据设定的分发模式给出应答IP
-    public Address dispatchAddress(long ip) {
-        if ("random".equals(dispatchMode)) {
-            // 随机
-            return this.addresses.get((random.nextInt() & 0x7fffffff) % this.addresses.size());
-        } else if ("round-robin".equals(dispatchMode)) {
-            // 轮循
-            return this.addresses.get(((sequence++) & 0x7fffffff) % this.addresses.size());
-        } else if ("iphash".equals(dispatchMode)) {
-            // IP Hash
-            return this.addresses.get((int) (ip % this.addresses.size()));
-        } else return null;
+    public String dispatchAddress(long ip) {
+//        if ("random".equals(dispatchMode)) {
+//            // 随机
+//            return this.addresses.get((random.nextInt() & 0x7fffffff) % this.addresses.size());
+//        } else if ("round-robin".equals(dispatchMode)) {
+//            // 轮循
+//            return this.addresses.get(((sequence++) & 0x7fffffff) % this.addresses.size());
+//        } else if ("iphash".equals(dispatchMode)) {
+//            // IP Hash
+//            return this.addresses.get((int) (ip % this.addresses.size()));
+//        } else return null;
+        String addrs[] = this.addresses.split(",");
+        if (addrs.length > 1) {
+            //todo
+        }
+        return addrs[0];
     }
 
-    public List<Address> getAddresses() {
+//    public List<Address> getAddresses() {
+//        return addresses;
+//    }
+//
+//    public Rule setAddresses(List<Address> addresses) {
+//        this.addresses = addresses;
+//        return this;
+//    }
+
+
+    public String getAddresses() {
         return addresses;
     }
 
-    public Rule setAddresses(List<Address> addresses) {
+    public void setAddresses(String addresses) {
         this.addresses = addresses;
-        return this;
     }
 
     public Long getId() {

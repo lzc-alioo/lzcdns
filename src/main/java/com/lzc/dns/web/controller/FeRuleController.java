@@ -2,10 +2,8 @@ package com.lzc.dns.web.controller;
 
 import com.lzc.dns.manager.RuleManager;
 import com.lzc.dns.util.IPUtils;
-import com.lzc.dns.web.entity.Address;
 import com.lzc.dns.web.entity.Result;
 import com.lzc.dns.web.entity.Rule;
-import com.lzc.dns.web.service.AddressService;
 import com.lzc.dns.web.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by matrixy on 2019/5/1.
  */
@@ -28,8 +23,6 @@ public class FeRuleController extends BaseController {
     @Autowired
     RuleService ruleService;
 
-    @Autowired
-    AddressService addrService;
 
     @RequestMapping("/list")
     @ResponseBody
@@ -93,34 +86,26 @@ public class FeRuleController extends BaseController {
                 throw new RuntimeException("请选择应答IP的分发模式");
             if (addr == null || addr.length == 0) throw new RuntimeException("请至少添加一个IP地址");
 
+            int addressCount = 0;
+            for (int i = 0; i < addr.length; i++) {
+                if (StringUtils.isEmpty(addr[i])) continue;
+                if (addr[i].matches("^(\\d{1,3})(\\.\\d{1,3}){3}$") == false)
+                    throw new RuntimeException("请输入正确格式的IP应答地址");
+                addressCount += 1;
+            }
+            if (addressCount == 0) throw new RuntimeException("请至少输入一个IP应答地址");
+
+
             rule.setPriority(0);
             rule.setMatchMode(matchMode);
             rule.setName(name);
             rule.setEnabled(true);
             rule.setDispatchMode(dispatchMode);
+            rule.setAddresses(addresses);
 
             ruleService.create(rule);
 
-            int addressCount = 0;
-            List<Address> addrList = new ArrayList(addr.length);
-            for (int i = 0; i < addr.length; i++) {
-                if (StringUtils.isEmpty(addr[i])) continue;
-                if (addr[i].matches("^(\\d{1,3})(\\.\\d{1,3}){3}$") == false)
-                    throw new RuntimeException("请输入正确格式的IP应答地址");
-
-                Address item = new Address();
-                item.setRuleId(rule.getId());
-                item.setType("IPv4");
-                item.setAddress(addr[i]);
-
-                addrService.create(item);
-                addrList.add(item);
-                addressCount += 1;
-            }
-            if (addressCount == 0) throw new RuntimeException("请至少输入一个IP应答地址");
-
             // 实时更新内存缓存中的规则列表
-            rule.setAddresses(addrList);
             RuleManager.getInstance().add(rule);
         } catch (Exception ex) {
             result.setError(ex);
@@ -144,7 +129,7 @@ public class FeRuleController extends BaseController {
             Rule rule = ruleService.getById(ruleId);
             if (rule == null) throw new RuntimeException("查无此解析规则");
 
-            rule.setAddresses(addrService.find(ruleId));
+//            rule.setAddresses(addrService.find(ruleId));
             result.setData(rule);
         } catch (Exception ex) {
             result.setError(ex);
@@ -210,35 +195,25 @@ public class FeRuleController extends BaseController {
                 throw new RuntimeException("请选择应答IP的分发模式");
             if (addr == null || addr.length == 0) throw new RuntimeException("请至少添加一个IP地址");
 
+            int addressCount = 0;
+            for (int i = 0; i < addr.length; i++) {
+                if (StringUtils.isEmpty(addr[i])) continue;
+                if (addr[i].matches("^(\\d{1,3})(\\.\\d{1,3}){3}$") == false)
+                    throw new RuntimeException("请输入正确格式的IP应答地址");
+                addressCount += 1;
+            }
+            if (addressCount == 0) throw new RuntimeException("请至少输入一个IP应答地址");
+
+
             rule.setPriority(0);
             rule.setMatchMode(matchMode);
             rule.setName(name);
             rule.setEnabled(true);
             rule.setDispatchMode(dispatchMode);
-
+            rule.setAddresses(addresses);
             ruleService.update(rule);
-            addrService.removeByRule(rule);
-
-            int addressCount = 0;
-            List<Address> addrList = new ArrayList(addr.length);
-            for (int i = 0; i < addr.length; i++) {
-                if (StringUtils.isEmpty(addr[i])) continue;
-                if (addr[i].matches("^(\\d{1,3})(\\.\\d{1,3}){3}$") == false)
-                    throw new RuntimeException("请输入正确格式的IP应答地址");
-
-                Address item = new Address();
-                item.setRuleId(rule.getId());
-                item.setType("IPv4");
-                item.setAddress(addr[i]);
-
-                addrService.create(item);
-                addrList.add(item);
-                addressCount += 1;
-            }
-            if (addressCount == 0) throw new RuntimeException("请至少输入一个IP应答地址");
 
             // 实时更新内存缓存中的规则列表
-            rule.setAddresses(addrList);
             RuleManager.getInstance().add(rule);
         } catch (Exception ex) {
             if (entity != null) RuleManager.getInstance().add(entity);
@@ -278,8 +253,6 @@ public class FeRuleController extends BaseController {
             Rule rule = ruleService.getById(ruleId);
             if (null == rule) throw new RuntimeException("查无此解析规则");
             ruleService.remove(rule);
-            addrService.removeByRule(rule);
-
             RuleManager.getInstance().remove(rule);
         } catch (Exception ex) {
             result.setError(ex);

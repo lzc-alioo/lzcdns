@@ -1,9 +1,7 @@
 package com.lzc.dns.manager;
 
 import com.lzc.dns.util.SpringUtils;
-import com.lzc.dns.web.entity.Address;
 import com.lzc.dns.web.entity.Rule;
-import com.lzc.dns.web.service.AddressService;
 import com.lzc.dns.web.service.RuleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +23,7 @@ public final class RuleManager {
     }
 
     // 匹配是否有已经设定的解析规则，如果有，则根据分发模式给出应答地址，否则返回null交由上游DNS服务器进行解答
-    public Address matches(int now, long ip, String domainName) {
+    public String matches(int now, long ip, String domainName) {
         for (Rule rule : rules) {
             if (rule.getEnabled() && rule.matches(now, ip, domainName)) {
                 return rule.dispatchAddress(ip);
@@ -63,15 +61,15 @@ public final class RuleManager {
     // 初始化，从数据库中加载全部设定的应答规则
     public void init() {
         RuleService ruleService = null;
-        AddressService addrService = null;
+//        AddressService addrService = null;
         try {
             ruleService = SpringUtils.getBean(RuleService.class);
-            addrService = SpringUtils.getBean(AddressService.class);
+//            addrService = SpringUtils.getBean(AddressService.class);
 
             List<Rule> ruleList = ruleService.find(1, Integer.MAX_VALUE).getList();
             for (int i = ruleList.size() - 1; i >= 0; i--) {
                 Rule rule = ruleList.get(i);
-                rule.setAddresses(addrService.find(rule.getId()));
+//                rule.setAddresses(addrService.find(rule.getId()));
                 this.rules.add(rule);
             }
 
@@ -83,10 +81,10 @@ public final class RuleManager {
                 SpringUtils.destroy(ruleService);
             } catch (Exception e) {
             }
-            try {
-                SpringUtils.destroy(addrService);
-            } catch (Exception e) {
-            }
+//            try {
+//                SpringUtils.destroy(addrService);
+//            } catch (Exception e) {
+//            }
         }
     }
 

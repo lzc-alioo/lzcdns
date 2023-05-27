@@ -50,7 +50,7 @@ public class FeUserInterceptor extends HandlerInterceptorAdapter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         Map<String, String> map = new HashMap<>();
-        map.put("message", "toke authorize failed");
+        map.put("message", "login failed！");
 
         try {
             ObjectMapper mapper = new ObjectMapper();

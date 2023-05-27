@@ -12,6 +12,7 @@
     <result column="priority" jdbcType="INTEGER" property="priority" />
     <result column="enabled" jdbcType="BIT" property="enabled" />
     <result column="dispatchMode" jdbcType="VARCHAR" property="dispatchMode" />
+    <result column="addresses" jdbcType="VARCHAR" property="addresses" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -72,7 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, ipFrom, ipTo, timeFrom, timeTo, matchMode, `name`, priority, enabled, dispatchMode
+    id, ipFrom, ipTo, timeFrom, timeTo, matchMode, `name`, priority, enabled, dispatchMode,addresses
   </sql>
   <select id="selectByExample" parameterType="com.lzc.dns.web.entity.RuleExample" resultMap="BaseResultMap">
     select
@@ -115,11 +116,12 @@
   <insert id="insert" parameterType="com.lzc.dns.web.entity.Rule" useGeneratedKeys="true" keyProperty="id">
     insert into `rule` (id, ipFrom, ipTo, 
       timeFrom, timeTo, matchMode,
-      `name`, priority, enabled, dispatchMode
+      `name`, priority, enabled, dispatchMode, addresses
       )
     values (#{id,jdbcType=BIGINT}, #{ipFrom,jdbcType=BIGINT}, #{ipTo,jdbcType=BIGINT}, 
       #{timeFrom,jdbcType=INTEGER}, #{timeTo,jdbcType=INTEGER}, #{matchMode,jdbcType=VARCHAR},
       #{name,jdbcType=VARCHAR}, #{priority,jdbcType=INTEGER}, #{enabled,jdbcType=BIT}, #{dispatchMode,jdbcType=VARCHAR}
+     , #{addresses,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.lzc.dns.web.entity.Rule" useGeneratedKeys="true" keyProperty="id">
@@ -155,6 +157,9 @@
       <if test="dispatchMode != null">
         dispatchMode,
       </if>
+      <if test="addresses != null">
+        addresses,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -186,6 +191,9 @@
       </if>
       <if test="dispatchMode != null">
         #{dispatchMode,jdbcType=VARCHAR},
+      </if>
+      <if test="addresses != null">
+        #{addresses,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -228,6 +236,9 @@
       <if test="record.dispatchMode != null">
         dispatchMode = #{record.dispatchMode,jdbcType=VARCHAR},
       </if>
+      <if test="record.addresses != null">
+        addresses = #{record.addresses,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -245,6 +256,7 @@
       priority = #{record.priority,jdbcType=INTEGER},
       enabled = #{record.enabled,jdbcType=BIT},
       dispatchMode = #{record.dispatchMode,jdbcType=VARCHAR},
+      addresses = #{record.addresses,jdbcType=VARCHAR},
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -279,6 +291,9 @@
       <if test="dispatchMode != null">
         dispatchMode = #{dispatchMode,jdbcType=VARCHAR},
       </if>
+      <if test="addresses != null">
+        addresses = #{addresses,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -293,6 +308,7 @@
       priority = #{priority,jdbcType=INTEGER},
       enabled = #{enabled,jdbcType=BIT},
       dispatchMode = #{dispatchMode,jdbcType=VARCHAR}
+      addresses = #{addresses,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <insert id="batchInsert" parameterType="map">
