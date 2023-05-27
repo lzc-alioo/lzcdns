@@ -1,5 +1,5 @@
 CREATE USER 'test'@'%' IDENTIFIED BY '123456';
-GRANT ALL PRIVILEGES ON dnscheater.* to 'test'@'%';
+GRANT ALL PRIVILEGES ON lzcdns.* to 'test'@'%';
 
-CREATE DATABASE dnscheater ;
-USE dnscheater;
+CREATE DATABASE lzcdns ;
+USE lzcdns;

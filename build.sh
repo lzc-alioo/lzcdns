@@ -1,9 +1,10 @@
 mvn clean package -DskipTests=true
 
-rm -rf build
+rm -rf build/*
+rm -rf logs/*
+
 mkdir build
 
-rm -rf logs/*
 
 PATH_BASE=$(cd $(dirname $0); pwd)
 

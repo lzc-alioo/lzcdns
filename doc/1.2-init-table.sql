@@ -1,13 +1,13 @@
-DROP TABLE IF EXISTS `address`;
-CREATE TABLE `address`
-(
-    `id`      bigint(20) NOT NULL AUTO_INCREMENT,
-    `ruleId`  bigint(20) DEFAULT NULL,
-    `type`    varchar(10)  DEFAULT NULL COMMENT '地址类型，IPv4或IPv6',
-    `address` varchar(100) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    KEY       `address_ruleid_idx` (`ruleId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COMMENT='规则所设定的IP集';
+-- DROP TABLE IF EXISTS `address`;
+-- CREATE TABLE `address`
+-- (
+--     `id`      bigint(20) NOT NULL AUTO_INCREMENT,
+--     `ruleId`  bigint(20) DEFAULT NULL,
+--     `type`    varchar(10)  DEFAULT NULL COMMENT '地址类型，IPv4或IPv6',
+--     `address` varchar(100) DEFAULT NULL,
+--     PRIMARY KEY (`id`),
+--     KEY       `address_ruleid_idx` (`ruleId`) USING BTREE
+-- ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COMMENT='规则所设定的IP集';
 
 
 DROP TABLE IF EXISTS `rule`;
@@ -23,6 +23,7 @@ CREATE TABLE `rule`
     `priority`     int(11) DEFAULT NULL COMMENT '匹配优先级',
     `enabled`      bit(1)       DEFAULT NULL COMMENT '是否启用',
     `dispatchMode` varchar(20)  DEFAULT NULL COMMENT '分发模式，如iphash、round-robin、random',
+    `addresses`    varchar(1024)  DEFAULT '0.0.0.0' COMMENT '转发ip集，多个用英文逗号分隔',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='解析规则';
 
@@ -45,34 +46,34 @@ CREATE TABLE `user`
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 
-
-LOCK
-TABLES `address` WRITE;
-INSERT INTO `address`
-VALUES (4, 3, 'IPv4', '192.168.10.2'),
-       (5, 3, 'IPv4', '192.168.10.3'),
-       (6, 3, 'IPv4', '192.168.10.4'),
-       (7, 3, 'IPv4', '192.168.10.5'),
-       (8, 4, 'IPv4', '127.0.0.1'),
-       (9, 4, 'IPv4', '127.0.0.2'),
-       (10, 4, 'IPv4', '127.0.0.3'),
-       (11, 4, 'IPv4', '127.0.0.4'),
-       (12, 3, 'IPv4', '192.168.10.6'),
-       (13, 3, 'IPv4', '192.168.10.7'),
-       (14, 3, 'IPv4', '192.168.10.8'),
-       (15, 3, 'IPv4', '192.168.10.9'),
-       (16, 3, 'IPv4', '192.168.10.10'),
-       (20, 8, 'IPv4', '127.0.0.1');
-UNLOCK
-TABLES;
+--
+-- LOCK
+-- TABLES `address` WRITE;
+-- INSERT INTO `address`
+-- VALUES (4, 3, 'IPv4', '192.168.10.2'),
+--        (5, 3, 'IPv4', '192.168.10.3'),
+--        (6, 3, 'IPv4', '192.168.10.4'),
+--        (7, 3, 'IPv4', '192.168.10.5'),
+--        (8, 4, 'IPv4', '127.0.0.1'),
+--        (9, 4, 'IPv4', '127.0.0.2'),
+--        (10, 4, 'IPv4', '127.0.0.3'),
+--        (11, 4, 'IPv4', '127.0.0.4'),
+--        (12, 3, 'IPv4', '192.168.10.6'),
+--        (13, 3, 'IPv4', '192.168.10.7'),
+--        (14, 3, 'IPv4', '192.168.10.8'),
+--        (15, 3, 'IPv4', '192.168.10.9'),
+--        (16, 3, 'IPv4', '192.168.10.10'),
+--        (20, 8, 'IPv4', '127.0.0.1');
+-- UNLOCK
+-- TABLES;
 
 
 LOCK
 TABLES `rule` WRITE;
 INSERT INTO `rule`
-VALUES (3, 3232238081, 3232238335, 0, 180000, 'suffix', '.wukon.com.cn', 0, 1, 'iphash'),
-       (4, 3232238081, 3232238335, 0, 235959, 'contains', '.weibo.', 0, 1, 'round-robin'),
-       (8, 3232238081, 3232238335, 0, 235900, 'suffix', '.hentai.org.cn', 0, 1, 'round-robin');
+VALUES (3, 3232238081, 3232238335, 0, 180000, 'suffix', '.wukon.com.cn', 0, 1, 'iphash','0.0.0.0'),
+       (4, 3232238081, 3232238335, 0, 235959, 'contains', '.weibo.', 0, 1, 'round-robin','0.0.0.0'),
+       (8, 3232238081, 3232238335, 0, 235900, 'suffix', '.hentai.org.cn', 0, 1, 'round-robin','0.0.0.0');
 UNLOCK
 TABLES;
 
