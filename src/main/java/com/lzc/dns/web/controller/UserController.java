@@ -42,6 +42,8 @@ public class UserController extends BaseController {
             User user = userService.login(name, password, getIP());
 
             session.setAttribute("loginUser", user);
+
+            result.setData(Result.values("token", session.getId()));
         } catch (Exception ex) {
             result.setError(ex);
         }
@@ -111,7 +113,8 @@ public class UserController extends BaseController {
             if (StringUtils.isEmpty(name)) throw new RuntimeException("请输入账号名称");
             if (name.length() < 4 || name.length() > 20) throw new RuntimeException("账号名称必须是4~20个字符之间");
             if (StringUtils.isEmpty(password)) throw new RuntimeException("请输入账号密码");
-            if (password.length() < 6 || password.length() > 32) throw new RuntimeException("登陆密码必须是6~32个字符之间");
+            if (password.length() < 6 || password.length() > 32)
+                throw new RuntimeException("登陆密码必须是6~32个字符之间");
             if (!password.equals(password2)) throw new RuntimeException("两次输入的密码不一致");
 
             userService.register(name, password);

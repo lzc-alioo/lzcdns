@@ -14,7 +14,8 @@ public class EagleEyeContext {
     }
 
     public static EagleEyeContext create() {
-        String traceId = UUID.randomUUID().toString().replaceAll("\\-", "").substring(0, 32);
+//        String traceId = UUID.randomUUID().toString().replaceAll("\\-", "").substring(0, 32);
+        String traceId = IdGenerator.generateId();
         return create(traceId);
     }
 

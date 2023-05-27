@@ -1,5 +1,6 @@
 package com.lzc.dns.web.service;
 
+import com.lzc.dns.manager.entity.RankVo;
 import com.lzc.dns.util.DateTimeUtil;
 import com.lzc.dns.web.entity.Stat;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +24,15 @@ public class StatService {
     @Value("${dns.stat.monitor-path}")
     String monitorPath;
 
-    public Map<String, LinkedHashMap<String, Long>> topStat(String monitorDate, String startTime, String endTime) {
+    public Map<String, List<RankVo>> topStat(String monitorDate, String startTime, String endTime) {
 
         List<Stat> list = this.readMonitorFile(monitorDate, startTime, endTime);
 
         //top10排序，按域名，按remoteIp
-        LinkedHashMap<String, Long> domainNameStat = findTopNames(list, 10);
-        LinkedHashMap<String, Long> ipStat = findTopClients(list, 10);
+        List<RankVo> domainNameStat = findTopNames(list, 20);
+        List<RankVo> ipStat = findTopClients(list, 20);
 
-        Map<String, LinkedHashMap<String, Long>> map = new HashMap();
+        Map<String, List<RankVo>> map = new HashMap();
         map.put("domainNameStat", domainNameStat);
         map.put("ipStat", ipStat);
 
@@ -49,7 +50,7 @@ public class StatService {
         File monitorFile = getMonitorFile(monitorDate);
         log.info("getMonitorFile monitorDate:{} monitorFile:{}", monitorDate, monitorFile);
 
-        if(monitorFile==null){
+        if (monitorFile == null) {
             return Collections.EMPTY_LIST;
         }
         try {
@@ -103,7 +104,7 @@ public class StatService {
         }
 
         File retFile = Arrays.stream(new File(monitorPath).listFiles())
-                .filter((File file) -> file.getName().contains(todayDate))
+                .filter((File file) -> file.getName().contains("monitor") && file.getName().contains(monitorDate))
                 .findFirst()
                 .orElse(null);
 
@@ -114,7 +115,7 @@ public class StatService {
 
 
     // 按被查询域名查TOP N
-    private LinkedHashMap<String, Long> findTopNames(List<Stat> list, int N) {
+    private List<RankVo> findTopNames(List<Stat> list, int N) {
         Map<String, Long> identityMap = new HashMap<>();
         list.stream().map(stat -> stat.getName()).forEach(str -> {
             identityMap.putIfAbsent(str, 0L);
@@ -128,21 +129,18 @@ public class StatService {
         })).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 
-        if (map.size() >= N) {
-            LinkedHashMap<String, Long> map2 = new LinkedHashMap();
-            for (Map.Entry<String, Long> entry : map.entrySet()) {
-                if (map2.size() < N)
-                    map2.put(entry.getKey(), entry.getValue());
+        List<RankVo> list2 = new ArrayList<>(N);
+        for (Map.Entry<String, Long> entry : map.entrySet()) {
+            if (list2.size() < N) {
+                list2.add(new RankVo(entry.getKey(), entry.getValue()));
             }
-            return map2;
-        } else {
-            return map;
         }
+        return list2;
     }
 
 
     // 按查询来源IP查TOP N
-    private LinkedHashMap<String, Long> findTopClients(List<Stat> list, int N) {
+    private List<RankVo> findTopClients(List<Stat> list, int N) {
         Map<String, Long> identityMap = new HashMap<>();
         list.stream().map(stat -> stat.getRemoteIp()).forEach(str -> {
             identityMap.putIfAbsent(str, 0L);
@@ -156,17 +154,13 @@ public class StatService {
         })).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 
-        if (map.size() >= N) {
-            LinkedHashMap<String, Long> map2 = new LinkedHashMap();
-            for (Map.Entry<String, Long> entry : map.entrySet()) {
-                if (map2.size() < N)
-                    map2.put(entry.getKey(), entry.getValue());
+        List<RankVo> list2 = new ArrayList<>(N);
+        for (Map.Entry<String, Long> entry : map.entrySet()) {
+            if (list2.size() < N) {
+                list2.add(new RankVo(entry.getKey(), entry.getValue()));
             }
-            return map2;
-        } else {
-            return map;
         }
-
+        return list2;
     }
 
 

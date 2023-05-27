@@ -7,6 +7,7 @@ import com.lzc.dns.util.Packet;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -33,10 +34,14 @@ public class NameServer extends Thread {
             nameSender = new NameSender(datagramChannel);
             nameResolver = new NameResolver(this);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
+//            if (!(e instanceof BindException)) {
             log.error("NameServer start error ...", e);
             System.exit(1);
+
+//            }
         }
+
     }
 
     private DatagramChannel initDatagramChannel() throws IOException {

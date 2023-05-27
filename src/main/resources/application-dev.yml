@@ -15,7 +15,7 @@ dns:
     sender:
       workers: 8
     server:
-      address: 114.114.114.114
+      address: 221.179.155.177
       port: 53
   stat:
     monitor-path: /Users/alioo/work/gitstudy/lzcdns/logs

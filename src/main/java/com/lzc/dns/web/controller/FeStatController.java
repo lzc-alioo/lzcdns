@@ -10,10 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +20,8 @@ import java.util.Map;
  */
 @Slf4j
 @Controller
-@RequestMapping("/manage/stat")
-public class StatController extends BaseController {
+@RequestMapping("/fe/manage/stat")
+public class FeStatController extends BaseController {
 
     @Autowired
     private StatService statService;
@@ -36,12 +34,6 @@ public class StatController extends BaseController {
         log.info("summary2 monitorDate:{} startTime:{} endTime:{}", monitorDate, startTime, endTime);
         Map<String, List<RankVo>> map = statService.topStat(monitorDate, startTime, endTime);
         return map;
-    }
-
-
-    @RequestMapping("/")
-    public String index() {
-        return "/stat/index";
     }
 
     // 几个计数项：总查询次数、总应答次数、总回源查询次数、当前缓存量
@@ -79,29 +71,5 @@ public class StatController extends BaseController {
         return result;
     }
 
-    // 当天查询来源IP TOP N
-    @RequestMapping("/topQueryClients")
-    @ResponseBody
-    public Result topQueryClients(@RequestParam(defaultValue = "10") int count) {
-        Result result = new Result();
-        try {
-            result.setData(StatManager.getInstance().findTopClients(count));
-        } catch (Exception ex) {
-            result.setError(ex);
-        }
-        return result;
-    }
 
-    // 当天查询域名TOP N
-    @RequestMapping("/topQueryNames")
-    @ResponseBody
-    public Result topQueryNames(@RequestParam(defaultValue = "10") int count) {
-        Result result = new Result();
-        try {
-            result.setData(StatManager.getInstance().findTopNames(count));
-        } catch (Exception ex) {
-            result.setError(ex);
-        }
-        return result;
-    }
 }

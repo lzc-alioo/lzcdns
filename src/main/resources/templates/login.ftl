@@ -120,7 +120,9 @@
 
             $.post('${context}/login', { name : name, password : password }, function(result)
             {
-                if (result.error.code) return alert(result.error.reason);
+                if (result.error.code) {
+                    return alert(result.error.reason);
+                }
                 location.href = '${context}/manage/';
             });
         });
