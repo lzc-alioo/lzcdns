@@ -7,14 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by matrixy on 2017/12/13.
  */
 @Configuration
-public class AppConfiguration extends WebMvcConfigurerAdapter {
+public class InterceptorConfig extends WebMvcConfigurerAdapter {
 
     public ConcurrentHashMap<String, Object> sessionDb() {
         ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();

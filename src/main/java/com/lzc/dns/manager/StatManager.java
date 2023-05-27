@@ -34,8 +34,6 @@ public final class StatManager {
     private AtomicIntegerArray everyMinuteQueries;
 
     private StatManager() {
-//        String lmem = Configs.get("dns.stat-logger.memory");
-//        int i = Conversion.toByte(lmem);
         domainNameMap = new ConcurrentHashMap<>();
         ipStatMap = new ConcurrentHashMap<>();
 
@@ -65,27 +63,12 @@ public final class StatManager {
             return;
         }
 
-//        DomainNameStat domainNameStat = domainNameMap.get(domainName);
-//        if (domainNameStat == null) {
-//            domainNameStat = new DomainNameStat(domainName, 0);
-//            domainNameMap.putIfAbsent(domainName, domainNameStat);
-//        }
-//        domainNameStat.queryCount += 1;
-
         DomainNameStat domainNameStat = new DomainNameStat(domainName, 0);
         domainNameMap.putIfAbsent(domainName, domainNameStat);
         domainNameMap.compute(domainName, (k, v) -> {
             v.queryCount++;
             return v;
         });
-
-
-//        IPStat ipStat = ipStatMap.get(ip);
-//        if (ipStat == null) {
-//            ipStat = new IPStat(ip, 0);
-//            ipStatMap.putIfAbsent(ip, ipStat);
-//        }
-//        ipStat.queryCount += 1;
 
         IPStat ipStat = new IPStat(ip, 0);
         ipStatMap.putIfAbsent(ip, ipStat);
@@ -108,7 +91,6 @@ public final class StatManager {
     private void logEveryMinuteQueries(int time) {
         int hours = time / 10000, minutes = (time - hours * 10000) / 100;
         int m = hours * 60 + minutes;
-//        everyMinuteQueries[m] += 1;
         everyMinuteQueries.addAndGet(m, 1);
 
     }
@@ -137,8 +119,6 @@ public final class StatManager {
     public int[] getEveryMinuteQueryCount() {
         Date now = new Date();
         int minutes = now.getHours() * 60 + now.getMinutes();
-//        int[] queries = new int[minutes];
-//        System.arraycopy(everyMinuteQueries, 0, queries, 0, minutes);
 
         int[] queries = new int[minutes];
         for (int i = 0; i < minutes; i++) {
@@ -147,39 +127,39 @@ public final class StatManager {
         return queries;
     }
 
-    // 按查询来源IP查TOP N
-    public List<IPStat> findTopClients(int N) {
-        // 排序后取前N
-        List<IPStat> statList = new ArrayList(ipStatMap.values());
-        Collections.sort(statList, new Comparator<IPStat>() {
-            @Override
-            public int compare(IPStat o1, IPStat o2) {
-                return o2.queryCount - o1.queryCount;
-            }
-        });
+//    // 按查询来源IP查TOP N
+//    public List<IPStat> findTopClients(int N) {
+//        // 排序后取前N
+//        List<IPStat> statList = new ArrayList(ipStatMap.values());
+//        Collections.sort(statList, new Comparator<IPStat>() {
+//            @Override
+//            public int compare(IPStat o1, IPStat o2) {
+//                return o2.queryCount - o1.queryCount;
+//            }
+//        });
+//
+//        if (statList.size() >= N) return statList.subList(0, N);
+//        else return statList;
+//
+//    }
 
-        if (statList.size() >= N) return statList.subList(0, N);
-        else return statList;
-
-    }
-
-    // 按被查询域名查TOP N
-    public List<DomainNameStat> findTopNames(int N) {
-        // 排序后取前N
-        List<DomainNameStat> statList = new ArrayList(domainNameMap.values());
-        Collections.sort(statList, new Comparator<DomainNameStat>() {
-            @Override
-            public int compare(DomainNameStat o1, DomainNameStat o2) {
-                return o2.queryCount - o1.queryCount;
-            }
-        });
-
-        if (statList.size() >= N) {
-            return statList.subList(0, N);
-        } else {
-            return statList;
-        }
-    }
+//    // 按被查询域名查TOP N
+//    public List<DomainNameStat> findTopNames(int N) {
+//        // 排序后取前N
+//        List<DomainNameStat> statList = new ArrayList(domainNameMap.values());
+//        Collections.sort(statList, new Comparator<DomainNameStat>() {
+//            @Override
+//            public int compare(DomainNameStat o1, DomainNameStat o2) {
+//                return o2.queryCount - o1.queryCount;
+//            }
+//        });
+//
+//        if (statList.size() >= N) {
+//            return statList.subList(0, N);
+//        } else {
+//            return statList;
+//        }
+//    }
 
     // 重置计数/统计项、日志信息等
     private synchronized void reset() {
@@ -194,7 +174,7 @@ public final class StatManager {
                 everyMinuteQueries.set(i, 0);
             }
 
-            logBeforeReset();
+            //logBeforeReset();
 
             //logs.reset();
             domainNameMap.clear();
@@ -202,14 +182,14 @@ public final class StatManager {
         }
     }
 
-    private void logBeforeReset() {
-        List<IPStat> ipStatList = findTopClients(10);
-        log.info("统计信息 ipStatList:{}", JSON.toJSONString(ipStatList));
-
-        List<DomainNameStat> domainNameStatList = findTopNames(10);
-        log.info("统计信息 domainNameStatList:{}", JSON.toJSONString(domainNameStatList));
-
-    }
+//    private void logBeforeReset() {
+//        List<IPStat> ipStatList = findTopClients(10);
+//        log.info("统计信息 ipStatList:{}", JSON.toJSONString(ipStatList));
+//
+//        List<DomainNameStat> domainNameStatList = findTopNames(10);
+//        log.info("统计信息 domainNameStatList:{}", JSON.toJSONString(domainNameStatList));
+//
+//    }
 
     static StatManager instance = null;
 
