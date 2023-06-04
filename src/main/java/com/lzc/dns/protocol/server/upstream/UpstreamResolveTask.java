@@ -215,6 +215,24 @@ public class UpstreamResolveTask extends Thread {
 
             ResourceRecord resourceRecord = new ResourceRecord(answerName, type, clazz, ttl, priority, weight, port, target);
             return resourceRecord;
+        } else if (type == MessageType.NAPTR.getType()) {
+
+            short order = packet.nextShort();
+            short preference = packet.nextShort();
+            byte flagLength = packet.nextByte();
+            String flags = this.getText(packet, flagLength);
+            byte serviceLength = packet.nextByte();
+            String service = this.getText(packet, serviceLength);
+            byte regexLength = packet.nextByte();
+            String regex = this.getText(packet, regexLength);
+//            byte replacementLength = packet.nextByte();
+//            String replacement = this.getText(packet, replacementLength);
+            String replacement = this.getAnswerName(packet);
+            byte replacementLength = (byte) replacement.length();
+
+            NaptrResourceRecord resourceRecord = new NaptrResourceRecord(answerName, type, clazz,
+                    order, preference, flagLength, flags, serviceLength, service, regexLength, regex, replacementLength, replacement);
+            return resourceRecord;
         }
 
         return null;
@@ -223,7 +241,16 @@ public class UpstreamResolveTask extends Thread {
 
 
     private String getText(Packet packet) {
-        int tmpLen = (int) packet.nextByte();
+        int tmpLen = packet.nextByte();
+
+//        byte[] dataBytes = packet.nextBytes(tmpLen);
+//        String txt = new String(dataBytes);
+//
+//        return txt;
+        return getText(packet, tmpLen);
+    }
+
+    private String getText(Packet packet, int tmpLen) {
         byte[] dataBytes = packet.nextBytes(tmpLen);
         String txt = new String(dataBytes);
 

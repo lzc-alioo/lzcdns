@@ -36,7 +36,7 @@ public class DnsPackageSendReceiveTest {
 
     private static boolean resolve(byte[] message) {
         short sequence = (short) ByteUtils.getShort(message, 0, 2);
-        log.info("resolve sequence:{},message:{}", sequence, message);
+        log.info("resolve sequence:{}, message.size:{}, message:{}", sequence, message.length, message);
 
         return true;
     }
@@ -56,7 +56,7 @@ public class DnsPackageSendReceiveTest {
         byte[] message = {0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //header ,length=12
                 5, 98, 97, 105, 100, 117, 3, 99, 111, 109,  //domain
                 0,    //domain end
-                0, 1, //queryType
+                0, 35, //queryType
                 0, 1 //queryClass
         };
         Packet packet = PackageBuilder.build(message, sequence++);
@@ -64,7 +64,7 @@ public class DnsPackageSendReceiveTest {
         SocketAddress upstreamNameServer = new InetSocketAddress("114.114.114.114", 53);
         DnsUtil.send(datagramChannel, upstreamNameServer, packet);
 
-        log.info("send sequence:{} message:{}", sequence, packet.getBytes());
+        log.info("send sequence:{} message.size:{} message:{}", sequence, packet.getBytes().length, packet.getBytes());
 
         try {
             Thread.sleep(5000);

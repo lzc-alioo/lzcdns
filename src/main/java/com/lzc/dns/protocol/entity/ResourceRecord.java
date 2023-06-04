@@ -13,9 +13,11 @@ import java.nio.charset.StandardCharsets;
  */
 @Data
 public class ResourceRecord {
+    //通用字段
     public String name;    //Answer Name
     public int type;       //Answer Type
     public int clazz;      //Answer Class 资源记录的类型，与问题部分中的查询类型值是一样的。
+
     public int ttl;        //Answer Time To Live(unit : second)
     public int dataLength; //Answer Data Length
 
@@ -37,6 +39,13 @@ public class ResourceRecord {
     private short weight;        //type=SRV专用
     private short port;          //type=SRV专用
     private String target;       //type=SRV专用
+
+
+    public ResourceRecord(String name, int type, int clazz) {
+        this.name = name;
+        this.type = type;
+        this.clazz = clazz;
+    }
 
     /**
      * IPV4

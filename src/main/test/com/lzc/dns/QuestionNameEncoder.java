@@ -23,12 +23,12 @@ public final class QuestionNameEncoder {
         //1,99,5,97,112,112,108,101,4,110,101,119,115,  //questionName c.apple.news
 
         //12(header组成)= 2(Transaction ID)+2(Flags)+2(Questions)+2(Answer RRs)+2(Authority RRs)+2(Additional RRs)
-        byte[] message = {0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //header ,length=12
-                5, 98, 97, 105, 100, 117, 3, 99, 111, 109,  //questionName
-                0,    //questionName end
-                0, 1, //queryType
-                0, 1 //queryClass
-        };
+//        byte[] message = {0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, //header ,length=12
+//                5, 98, 97, 105, 100, 117, 3, 99, 111, 109,  //questionName
+//                0,    //questionName end
+//                0, 1, //queryType
+//                0, 1 //queryClass
+//        };
 
         byte[] questionNameBytes = QuestionNameUtil.encode(questionName);
         Packet packet = Packet.create(1024);

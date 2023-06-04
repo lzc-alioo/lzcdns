@@ -20,4 +20,5 @@ dig @127.0.0.1 push.apple.com txt
 
 dig @127.0.0.1 _sips._tcp.5gmcsip02.hbq.rcs.chinamobile.com srv
 
+dig @127.0.0.1 siphh11.hbq.r.10086.cn naptr
 

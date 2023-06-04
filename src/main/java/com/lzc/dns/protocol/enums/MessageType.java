@@ -42,6 +42,12 @@ public enum MessageType {
     TXT(16, "TXT", "文本字符串"),
     AAAA(28, "AAAA", "IPv6主机地址"),
     SRV(33, "SRV", "资源记录把服务名字映射为提供服务的服务器名字"),
+    /**
+     * 根据ENUM技术将电话号码映射为DNS系统中的记录。这样一个电话号码变成了DNS中的域名形式。
+     * 每个E.164号码形成的域名可以对应多条网络资源记录，称为统一资源标识URI。
+     * URI采用了另一个IETF建议RFC 2915定义的格式，称为“名称权威指针”（Naming Authority Pointer，简称NAPTR）。
+     */
+    NAPTR(35, "NAPTR", "名称权威指针Naming Authority Pointer，简称NAPTR"),
     ADDR(41, "ADDR", "Additional records附加信息"),
     HTTPS(65, "HTTPS", "HTTPS"),
     UNKNOWN(9999, "UNKNOWN", "未知命令"),

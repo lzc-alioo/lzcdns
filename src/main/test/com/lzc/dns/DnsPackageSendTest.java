@@ -45,7 +45,7 @@ public class DnsPackageSendTest {
         log.info("sequence:{}", sequence);
 
 
-        SocketAddress upstreamNameServer = new InetSocketAddress("192.168.16.233", 53);
+        SocketAddress upstreamNameServer = new InetSocketAddress("114.114.114.114", 53);
 
 //        byte[] message = {0, 1, 1, 32, 0, 1, 0, 0, 0, 0, 0, 1, //header ,length=12
 //                5, 98, 97, 105, 100, 117, 3, 99, 111, 109, //domain
@@ -56,7 +56,7 @@ public class DnsPackageSendTest {
 //        Packet packet = Packet.create(message);
 
 //        Packet packet = QuestionNameEncoder.buildPacket( "df.tanx.com", sequence++, (short) MessageType.HTTPS.getType());
-        Packet packet = QuestionNameEncoder.buildPacket("iterm2.com", sequence, (short) MessageType.HTTPS.getType());
+        Packet packet = QuestionNameEncoder.buildPacket("siphh11.hbq.r.10086.cn", sequence, (short) MessageType.NAPTR.getType());
         packet.setShort(0, sequence);
 
         DnsUtil.send(datagramChannel, upstreamNameServer, packet);
